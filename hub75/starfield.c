@@ -25,9 +25,7 @@ void draw() {
         if(stars[i].x > WIDTH) {
             uint8_t color = rand() % 0xff;
             stars[i].x = 0;
-            stars[i].y = rand() % 32;
-            stars[i].speed = color / 2048.0;
-            stars[i].color = color | (color << 8) | (color << 16);
+            stars[i].y = rand() % HEIGHT;
         }
     }
     for(int i = 0; i < NUM_STARS; ++i) {

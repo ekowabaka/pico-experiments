@@ -57,6 +57,30 @@ void display_start(void (*callback)(void)) {
 
 void display_set_pixel(uint8_t x, uint8_t y, uint32_t color)
 {
-    buffer[x + y * WIDTH] = color;
+    if(x < WIDTH && y < HEIGHT) {
+        buffer[x + y * WIDTH] = color;
+    }
 }
 
+void display_draw_image(const uint8_t x, const uint8_t y, const uint8_t width, const uint8_t height, const uint32_t *data)
+{
+    if(x > WIDTH || y > HEIGHT) {
+        return;
+    }
+    int right = MIN(WIDTH, x + width);
+    int bottom = MIN(HEIGHT, y + height);
+    int new_width = right - x;
+    for(int i = y; i < bottom; i++) {
+        memcpy(buffer + i * WIDTH + x, data + (i - y) * width, new_width * sizeof(uint32_t));
+    }
+}
+
+void display_put_char(uint8_t x, uint8_t y, char c, uint32_t color)
+{
+
+}
+
+void display_draw_text(uint8_t x, uint8_t y, char *text, uint32_t color)
+{
+
+}
