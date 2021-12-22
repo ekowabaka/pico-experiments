@@ -17,12 +17,12 @@ project(pio_hub75 C CXX ASM)
 # Initialise the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-add_executable(pio_hub75)
+add_executable(starfield)
 
-pico_enable_stdio_usb(pio_hub75 0)
-pico_enable_stdio_uart(pio_hub75 1)
+pico_enable_stdio_usb(starfield 0)
+pico_enable_stdio_uart(starfield 1)
 
-pico_generate_pio_header(pio_hub75 ${CMAKE_CURRENT_LIST_DIR}/hub75.pio)
+pico_generate_pio_header(starfield ${CMAKE_CURRENT_LIST_DIR}/hub75.pio)
 
-target_sources(pio_hub75 PRIVATE hub75.c display.c)
-target_link_libraries(pio_hub75 PRIVATE pico_stdlib hardware_pio pico_multicore)
+target_sources(starfield PRIVATE starfield.c display.c)
+target_link_libraries(starfield PRIVATE pico_stdlib hardware_pio)
