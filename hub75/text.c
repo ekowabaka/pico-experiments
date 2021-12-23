@@ -8,7 +8,7 @@
 
 
 void draw() {
-    display_draw_image(2, 2, IMG_WIDTH, IMG_HEIGHT, smiley_1);
+    display_put_char(2, 2, 'J', 0xffffff, 1);
 }
 
 int main() {

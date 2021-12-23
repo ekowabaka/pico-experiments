@@ -10,6 +10,8 @@
 #include "hardware/pio.h"
 #include "hub75.pio.h"
 
+#include "font.h"
+
 static uint32_t *buffer;
 
 void display_start(void (*callback)(void)) {
@@ -75,12 +77,26 @@ void display_draw_image(const uint8_t x, const uint8_t y, const uint8_t width, c
     }
 }
 
-void display_put_char(uint8_t x, uint8_t y, char c, uint32_t color)
+void display_put_char(uint8_t x, uint8_t y, char c, uint32_t color, uint8_t size)
 {
-
+    if ((x >= WIDTH) || (y >= HEIGHT) || ((x + 6 * size - 1) < 0) || ((y + 8 * size - 1) < 0)) {
+        return;    
+    }
+    for (int8_t i = 0; i < 5; i++) {
+        uint8_t line = font[c * 5 + i];
+        for (int8_t j = 0; j < 8; j++, line >>= 1) {
+            if (line & 1) {
+                //if (size == 1 && size == 1) {
+                    display_set_pixel(x + i, y + j, color);
+                // } else {
+                //     writeFillRect(x + i * size, y + j * size, size, size, color);
+                // }
+            }        
+        }
+    }    
 }
 
-void display_draw_text(uint8_t x, uint8_t y, char *text, uint32_t color)
+void display_draw_text(uint8_t x, uint8_t y, char *text, uint32_t color, GFXfont *font)
 {
 
 }
