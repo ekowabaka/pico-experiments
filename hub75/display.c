@@ -14,6 +14,11 @@
 
 static uint32_t *buffer;
 
+/**
+ * @brief Initialize the display.
+ * 
+ * @param callback A callback to be called when the display is ready to be drawn.
+ */
 void display_start(void (*callback)(void)) {
     PIO pio = pio0;
     uint sm_data = 0;
@@ -57,10 +62,38 @@ void display_start(void (*callback)(void)) {
     }    
 }
 
+/**
+ * @brief Draw a pixel to the current buffer.
+ * 
+ * @param x Coordinate of the pixel.
+ * @param y Coordinate of the pixel.
+ * @param color Color of the pixel.
+ */
 void display_set_pixel(uint8_t x, uint8_t y, uint32_t color)
 {
     if(x < WIDTH && y < HEIGHT) {
         buffer[x + y * WIDTH] = color;
+    }
+}
+
+void display_draw_rectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint32_t color)
+{
+    for(int i = 0; i < width; ++i) {
+        display_set_pixel(x + i, y, color);
+        display_set_pixel(x + i, y + height - 1, color);
+    }
+    for(int i = 0; i < height; ++i) {
+        display_set_pixel(x, y + i, color);
+        display_set_pixel(x + width - 1, y + i, color);
+    }
+}
+
+void display_fill_rectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint32_t color)
+{
+    for(int i = 0; i < width; ++i) {
+        for(int j = 0; j < height; ++j) {
+            display_set_pixel(x + i, y + j, color);
+        }
     }
 }
 
@@ -77,26 +110,46 @@ void display_draw_image(const uint8_t x, const uint8_t y, const uint8_t width, c
     }
 }
 
-void display_put_char(uint8_t x, uint8_t y, char c, uint32_t color, uint8_t size)
+uint8_t display_put_char(uint8_t x, uint8_t y, unsigned char c, uint32_t color, const GFXfont *font)
 {
-    if ((x >= WIDTH) || (y >= HEIGHT) || ((x + 6 * size - 1) < 0) || ((y + 8 * size - 1) < 0)) {
-        return;    
+    if ((x >= WIDTH) || (y >= HEIGHT)) {
+        return 0;    
     }
-    for (int8_t i = 0; i < 5; i++) {
-        uint8_t line = font[c * 5 + i];
-        for (int8_t j = 0; j < 8; j++, line >>= 1) {
-            if (line & 1) {
-                //if (size == 1 && size == 1) {
-                    display_set_pixel(x + i, y + j, color);
-                // } else {
-                //     writeFillRect(x + i * size, y + j * size, size, size, color);
-                // }
-            }        
+
+    c -= font->first; // get actual index of character
+    GFXglyph *glyph  = &font->glyph[c];
+    uint8_t  *bitmap = font->bitmap;
+
+    uint8_t  w     = glyph->width;
+    uint8_t  h     = glyph->height;
+    int8_t  xo    = glyph->xOffset;
+    int8_t  yo    = glyph->yOffset;
+    uint8_t  xx, yy, bits, bit = 0;
+    int16_t bo = glyph->bitmapOffset;
+
+    for(yy=0; yy<h; yy++) {
+        for(xx=0; xx<w; xx++) {
+            if(!(bit++ & 7)) {
+                bits = bitmap[bo++];
+            }
+            if(bits & 0x80) {
+                display_set_pixel(x + xo + xx, y + yo + yy, color);
+            }
+            bits <<= 1;
         }
-    }    
+    }
+
+    return glyph->xAdvance;
 }
 
-void display_draw_text(uint8_t x, uint8_t y, char *text, uint32_t color, GFXfont *font)
+void display_draw_text(uint8_t x, uint8_t y, char *text, uint32_t color, const GFXfont *font)
 {
-
+    int len = strlen(text);
+    uint8_t x_cursor = x;
+    for (int i = 0; i < len; i++) {
+        x_cursor += display_put_char(x_cursor, y, text[i], color, font);
+        if (x_cursor > WIDTH) {
+            break;
+        }
+    }
 }
