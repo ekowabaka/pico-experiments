@@ -8,7 +8,7 @@ int main()
     {        
         PORTB |= 0b00100000;
 
-        for (long i = 0; i < 1000; i++)
+        for (long i = 0; i < 100000; i++)
         {
             PORTB |= 0b00100000;
         }

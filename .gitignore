@@ -4,4 +4,11 @@ build*
 .settings
 *.o
 *.out
-blink.hex
+*.hex
+*.lss
+*.map
+*.sym
+*.eep
+*.elf
+*.d
+*.lst

@@ -9,5 +9,3 @@ blink.hex: a.out
 
 flash: blink.hex
 	avrdude -v -c /etc/avrdude.conf -p atmega328p -c usbasp -P usb -U flash:w:blink.hex:i
-
-
