@@ -4,7 +4,6 @@
 #include "pico/stdlib.h"
 #include "display.h"
 #include "display_config.h"
-#include "smiling1.h"
 #include "fonts/Org_01.h"
 #include "fonts/Picopixel.h"
 #include "fonts/Tiny3x3a2pt7b.h"

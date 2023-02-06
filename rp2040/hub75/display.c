@@ -3,14 +3,10 @@
 
 #include <string.h>
 #include <stdlib.h>
-
 #include "pico/stdlib.h"
-
 #include "hardware/gpio.h"
 #include "hardware/pio.h"
 #include "hub75.pio.h"
-
-#include "font.h"
 
 static uint32_t *buffer;
 
@@ -76,6 +72,15 @@ void display_set_pixel(uint8_t x, uint8_t y, uint32_t color)
     }
 }
 
+/**
+ * @brief Draw a rectangle to the buffer.
+ * 
+ * @param x X coordinate of the top left corner of the rectangle.
+ * @param y Y coordinate of the top left corner of the rectangle.
+ * @param width Width of the rectangle.
+ * @param height Height of the rectangle.
+ * @param color Color of the rectangle.
+ */
 void display_draw_rectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint32_t color)
 {
     for(int i = 0; i < width; ++i) {
@@ -88,6 +93,15 @@ void display_draw_rectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height,
     }
 }
 
+/**
+ * @brief Draw a filled rectangle to the buffer.
+ * 
+ * @param x X coordinate of the top left corner of the rectangle.
+ * @param y Y coordinate of the top left corner of the rectangle.
+ * @param width Width of the rectangle.
+ * @param height Height of the rectangle.
+ * @param color Color of the rectangle.
+ */
 void display_fill_rectangle(uint8_t x, uint8_t y, uint8_t width, uint8_t height, uint32_t color)
 {
     for(int i = 0; i < width; ++i) {

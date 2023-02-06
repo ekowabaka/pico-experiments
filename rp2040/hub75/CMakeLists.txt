@@ -20,7 +20,6 @@ pico_generate_pio_header(starfield ${CMAKE_CURRENT_LIST_DIR}/hub75.pio)
 target_sources(starfield PRIVATE starfield.c display.c)
 target_link_libraries(starfield PRIVATE pico_stdlib hardware_pio)
 
-
 add_executable(smiley)
 pico_enable_stdio_usb(smiley 0)
 pico_enable_stdio_uart(smiley 1)
@@ -28,11 +27,17 @@ pico_generate_pio_header(smiley ${CMAKE_CURRENT_LIST_DIR}/hub75.pio)
 target_sources(smiley PRIVATE smiley.c display.c)
 target_link_libraries(smiley PRIVATE pico_stdlib hardware_pio)
 
-
 add_executable(text)
 pico_enable_stdio_usb(text 0)
 pico_enable_stdio_uart(text 1)
 pico_generate_pio_header(text ${CMAKE_CURRENT_LIST_DIR}/hub75.pio)
 target_sources(text PRIVATE text.c display.c)
 target_link_libraries(text PRIVATE pico_stdlib hardware_pio)
+
+add_executable(multicore)
+pico_enable_stdio_usb(multicore 0)
+pico_enable_stdio_uart(multicore 1)
+pico_generate_pio_header(multicore ${CMAKE_CURRENT_LIST_DIR}/hub75.pio)
+target_sources(multicore PRIVATE multicore.c display.c)
+target_link_libraries(multicore PRIVATE pico_stdlib pico_multicore hardware_pio hardware_rtc)
 
